@@ -1,5 +1,5 @@
 import { hideBin } from 'yargs/helpers';
-import { addNote, removeNote } from './notes.js';
+import { addNote, listNotes, readNote, removeNote } from './notes.js';
 import yargs from 'yargs';
 
 const yargsObject = yargs();
@@ -38,6 +38,29 @@ yargsObject
 		},
 		function (argv) {
 			removeNote(argv.title);
+		}
+	)
+	.command(
+		'list',
+		'List all notes',
+
+		function (argv) {
+			listNotes();
+		}
+	)
+	.command(
+		'read',
+		'Read a note',
+		(yargs) => {
+			yargs
+				.positional('title', {
+					type: 'string',
+					describe: 'Note title',
+				})
+				.demandOption(['title']);
+		},
+		function (argv) {
+			readNote(argv.title);
 		}
 	)
 	.help()

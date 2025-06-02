@@ -9,9 +9,9 @@ export function getNotes() {}
 export function addNote(title, body) {
 	const notes = loadNotes();
 
-	const duplicates = notes.filter((note) => note.title === title);
+	const duplicates = notes.findIndex((note) => note.title === title);
 
-	if (duplicates.length > 0) {
+	if (duplicates >= 0) {
 		console.log(chalk.red.inverse('Note already existed'));
 		return;
 	}
@@ -35,6 +35,28 @@ export function removeNote(title) {
     }
     
 	return 1;
+}
+
+export function readNote(title){
+	const notes = loadNotes();
+	const note = notes.find((note) => note.title === title);
+    if(!note) {
+        console.log(chalk.red('Note not found'))
+        return
+    }
+
+    console.log(chalk.bold.italic(note.title))
+    console.log('\t' + note.body)
+}
+
+export function listNotes(){
+    const notes = loadNotes();
+
+    console.log(chalk.yellowBright('Your notes:'))
+
+    notes.forEach(element => {
+        console.log(element.title)
+    });
 }
 
 function saveNotes(notes) {
