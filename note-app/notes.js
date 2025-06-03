@@ -10,6 +10,7 @@ export function addNote(title, body) {
 	const notes = loadNotes();
 
 	const duplicates = notes.findIndex((note) => note.title === title);
+    debugger
 
 	if (duplicates >= 0) {
 		console.log(chalk.red.inverse('Note already existed'));
@@ -40,6 +41,8 @@ export function removeNote(title) {
 export function readNote(title){
 	const notes = loadNotes();
 	const note = notes.find((note) => note.title === title);
+
+    
     if(!note) {
         console.log(chalk.red('Note not found'))
         return
