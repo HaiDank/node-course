@@ -16,9 +16,13 @@ const mapboxAxios = axios.create({
 
 weatherAxios
 	.get('')
-	.then((data) => {
-		const currentData = data.data.currently
-		const dailyData = data.data.daily
+	.then((res) => {
+		// if (res.data.detail) {
+		// 	console.log(chalk.red('Unable to find location'))
+		// 	return
+		// }
+		const currentData = res.data.currently
+		const dailyData = res.data.daily
 		console.log(
 			dailyData.summary +
 				' It is currently ' +
@@ -28,17 +32,21 @@ weatherAxios
 				' chance of rain.',
 		)
 	})
-	.catch((e) => console.log(chalk.red(e)))
+	.catch((e) => console.log(chalk.red('Unable to connect to weather web service:: ', e.message)))
 
 mapboxAxios
 	.get('', {
-        params: {
-            q: 'Los Angeles'
-        }
-    })
-	.then((data) => {{
-        console.log('Latitude: ', data.data.features[0].geometry.coordinates[1])
-		console.log('Longtitude: ', data.data.features[0].geometry.coordinates[0])
-    }
+		params: {
+			q: 'asdawdaw',
+		},
 	})
-	.catch((e) => console.log(e))
+	.then((res) => {
+		if(res.data.features.length > 0){
+			console.log('Latitude: ', res.data.features[0].geometry.coordinates[1])
+			console.log('Longtitude: ', res.data.features[0].geometry.coordinates[0])
+		} else {
+			console.log(chalk.red('Unable to find location'))
+			return
+        }
+	})
+	.catch((e) => console.log(chalk.red.inverse('ERROR') + chalk.red('Unable to connect to service:: ', e.message)))
