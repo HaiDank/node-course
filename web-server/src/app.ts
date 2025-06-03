@@ -2,6 +2,8 @@ import chalk from 'chalk'
 import express, { Request, Response } from 'express'
 import { create } from 'express-handlebars'
 import path from 'path'
+import { geocode } from './api/mapbox'
+import { forecast } from './api/pirateweather'
 
 const app = express()
 const hbs = create({ partialsDir: ['./views/partials/'] })
@@ -32,12 +34,31 @@ app.get('/about', (req: Request, res: Response) => {
 	})
 })
 
-app.get('/weather', (req: Request, res: Response) => {
-	res.render('weather', {
-		title: 'Weather',
-		forecast: 'test',
-		location: 'test',
-	})
+app.get('/weather', async (req: Request, res: Response) => {
+	const { address } = req.query
+
+	const geoResult = await geocode(address)
+
+	if (typeof geoResult === 'string') {
+		res.render('weather', {
+			title: 'Weather',
+			error: geoResult,
+		})
+	} else {
+		const forecastResult = await forecast(geoResult.latitude, geoResult.longitude)
+		if (forecastResult.forecast) {
+			res.render('weather', {
+				title: 'Weather',
+				forecast: forecastResult.forecast,
+				location: geoResult.location,
+			})
+		} else {
+			res.render('weather', {
+				title: 'Weather',
+				error: forecastResult.errorMessage,
+			})
+		}
+	}
 })
 
 app.get('/help/{*any}', (req: Request, res: Response) => {
