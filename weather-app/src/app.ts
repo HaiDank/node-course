@@ -10,11 +10,16 @@ if (!place) {
 	console.log(chalk.red('Please provide an address'))
 } else {
 	geocode(place, (error, data) => {
-		console.log(error)
-		if (data) {
-			forecast(data.latitude, data.longitude, (error, data) => {
-				console.log(data)
-			})
+		if (error) {
+			console.log(error)
+			return
 		}
+
+		const { latitude, longitude, location } = data!
+		console.log(chalk.bold.yellow(location))
+
+		forecast(latitude, longitude, (error, data) => {
+			console.log(data)
+		})
 	})
 }

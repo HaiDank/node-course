@@ -8,7 +8,8 @@ const mapboxAxios = axios.create({
 
 export const geocode = async (address: string, callback: (error?: string, data?: {
     latitude: number,
-    longitude: number
+    longitude: number,
+    location: string
 }) => void) => {
 	try {
 		const url = `search/geocode/v6/forward?access_token=${process.env.MAPBOX_TOKEN}`
@@ -18,8 +19,13 @@ export const geocode = async (address: string, callback: (error?: string, data?:
 				q: address,
 			},
 		})
-		if (result.data.features.length > 0) {
-			callback(undefined, result.data.features[0].properties.coordinates)
+        const {data} = result
+		if (data.features.length > 0) {
+            const res = {
+                ...data.features[0].properties.coordinates,
+                location: data.features[0].properties.full_address
+            }
+			callback(undefined, res)
 		} else {
 			callback(chalk.red('Unable to find location'), undefined)
 		}
