@@ -22,20 +22,6 @@ export default defineConfig([
 		rules: {
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': 'warn',
-			'prettier/prettier': [
-				'warn',
-				{
-					arrowParens: 'always',
-					semi: false,
-					trailingComma: 'all',
-					tabWidth: 4,
-					endOfLine: 'auto',
-					useTabs: true,
-					singleQuote: true,
-					printWidth: 120,
-					jsxSingleQuote: true,
-				},
-			],
 		},
 		ignores: ['**/node_modules/', '**/dist/'],
 	},
