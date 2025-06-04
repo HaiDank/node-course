@@ -23,6 +23,6 @@ export default defineConfig([
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': 'warn',
 		},
-		ignores: ['**/node_modules/', '**/dist/'],
+		ignores: ['**/node_modules/', '**/dist/', './public/**/*'],
 	},
 ])

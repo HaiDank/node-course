@@ -4,10 +4,12 @@ import { create } from 'express-handlebars'
 import path from 'path'
 import { geocode } from './api/mapbox'
 import { forecast } from './api/pirateweather'
+import cors from 'cors'
 
 const app = express()
 const hbs = create({ partialsDir: ['./views/partials/'] })
 
+app.use(cors({ origin: 'http://localhost:3000'}))
 app.use(express.static(path.join(__dirname, '../public')))
 
 app.engine('handlebars', hbs.engine)
@@ -35,26 +37,31 @@ app.get('/about', (req: Request, res: Response) => {
 })
 
 app.get('/weather', async (req: Request, res: Response) => {
-	const { address } = req.query
+	const  address = req.query.address
+
+	if(typeof address !== 'string'){
+		res.send({
+			error: 'Please enter a valid address'
+		})
+		return
+	}
 
 	const geoResult = await geocode(address)
 
 	if (typeof geoResult === 'string') {
-		res.render('weather', {
-			title: 'Weather',
+		res.send({
 			error: geoResult,
 		})
 	} else {
 		const forecastResult = await forecast(geoResult.latitude, geoResult.longitude)
 		if (forecastResult.forecast) {
-			res.render('weather', {
-				title: 'Weather',
+			res.send({
 				forecast: forecastResult.forecast,
 				location: geoResult.location,
+				address
 			})
 		} else {
-			res.render('weather', {
-				title: 'Weather',
+			res.send({
 				error: forecastResult.errorMessage,
 			})
 		}
