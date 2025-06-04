@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/app.ts",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "npx nodemon",
     "build": "rimraf ./dist && tsc && tsc-alias",
@@ -17,7 +20,6 @@
   "dependencies": {
     "axios": "^1.9.0",
     "chalk": "^5.4.1",
-    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
@@ -25,7 +27,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
-    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.29",
     "eslint": "^9.28.0",

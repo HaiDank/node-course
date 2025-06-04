@@ -4,12 +4,10 @@ import { create } from 'express-handlebars'
 import path from 'path'
 import { geocode } from './api/mapbox'
 import { forecast } from './api/pirateweather'
-import cors from 'cors'
 
 const app = express()
 const hbs = create({ partialsDir: ['./views/partials/'] })
 
-app.use(cors({ origin: 'http://localhost:3000'}))
 app.use(express.static(path.join(__dirname, '../public')))
 
 app.engine('handlebars', hbs.engine)
@@ -77,6 +75,5 @@ app.get('/{*any}', (req: Request, res: Response) => {
 })
 
 app.listen(3000, () => {
-	console.log(path.join(__dirname, '../public'))
 	console.log('Server is up on port: ' + chalk.bold.yellow('http://localhost:3000'))
 })
