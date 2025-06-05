@@ -1,15 +1,19 @@
 {
   "name": "task-manager",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "mongodb": "^6.17.0"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^5.1.0",
+    "handlebars": "^4.7.8",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.10",
+    "task-manager": "file:"
   }
 }
