@@ -7,19 +7,28 @@ import './db/mongoose.js'
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import tasksRouter from './routes/tasks.js';
+import 'dotenv/config'
 
 var app = express();
 
-
+// const maintainance = false
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
+// app.use(express.static(join(import.meta.dirname, 'public')));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(join(import.meta.dirname, 'public')));
+// app.use(function(req,res,next) {
+//   if(maintainance){
+//     res.status(503).send('Server under maintainance')
+//   } else {
+//     next()
+//   }
+// })
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -34,11 +43,12 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error 
+  // = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.send(err);
 });
 
 export default app;
