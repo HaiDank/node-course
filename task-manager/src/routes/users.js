@@ -28,14 +28,62 @@ router.get('/:id', async (req, res, next) => {
 	}
 });
 
-router.post('', (req, res) => {
-	const user = new User(req.body);
+// POST create user
+router.post('', async (req, res) => {
+	try {
+		const user = new User(req.body);
 
-	user.save()
-		.then(() => {
-			res.status(201).send(user);
-		})
-		.catch((e) => console.log(e));
+		const result = await user.save();
+
+		res.status(201).send(result);
+	} catch (e) {
+		res.status(400).send(e);
+	}
+});
+
+// PATCH update user
+router.patch('/:id', async (req, res) => {
+	const updates = Object.keys(req.body);
+	const allowedFields = ['name', 'email', 'password', 'age'];
+	const isValidField = updates.every((update) =>
+		allowedFields.includes(update)
+	);
+
+  if(!isValidField){
+    return res.status(400).send({error: 'Invalid field!'})
+  }
+
+	try {
+		const _id = req.params.id;
+
+		const result = await User.findByIdAndUpdate(_id, req.body, {
+			new: true,
+			runValidators: true,
+		});
+
+		if (!result) {
+			return res.status(404).send();
+		}
+		res.status(200).send(result);
+	} catch (e) {
+		res.status(400).send(e);
+	}
+});
+
+//DELETE remove a user by id
+router.delete('/:id', async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const result = await User.findOneAndDelete({ _id });
+
+    if (!result) {
+      return res.status(404).send('User not found!');
+    }
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(e);
+  }
 });
 
 export default router;

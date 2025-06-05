@@ -46,23 +46,32 @@ router.post('', async (req, res) => {
 		const task = new Task(req.body);
 
 		const result = await task.save();
-		
+
 		res.status(201).send(result);
 	} catch (e) {
 		res.status(400).send(e);
 	}
 });
 
-// PUT mark task as completed
-router.put('/complete/:id', async (req, res) => {
+// PATCH update task
+router.patch('/:id', async (req, res) => {
+	const updates = Object.keys(req.body);
+	const allowedFields = ['description', 'completed'];
+	const isValidField = updates.every((update) =>
+		allowedFields.includes(update)
+	);
+
+	if (!isValidField) {
+		return res.status(400).send({ error: 'Invalid field!' });
+	}
+
 	try {
 		const _id = req.params.id;
 
-		const result = await Task.findOneAndUpdate(
-			{ _id },
-			{ completed: true },
-			{ new: true }
-		);
+		const result = await Task.findOneAndUpdate({ _id }, req.body, {
+			new: true,
+			runValidators: true,
+		});
 
 		const count = await Task.countDocuments({ completed: false });
 
