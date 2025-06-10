@@ -3,6 +3,8 @@ import { User } from '../models/users.js';
 import auth from '../middleware/auth.js';
 import multer from 'multer';
 import sharp from 'sharp';
+import { sendGoodbyeEmail, sendWelcomeEmail } from '../emails/accounts.js';
+
 
 const storage = multer.memoryStorage();
 
@@ -94,8 +96,10 @@ router.post('/me/avatar', auth, upload.single('avatar'), async (req, res) => {
 router.post('/sign-up', async (req, res) => {
 	try {
 		const user = new User(req.body);
-
 		await user.save();
+
+		sendWelcomeEmail(user.email, user.name)
+
 		const token = await user.generateAuthToken();
 		res.status(201).send({
 			user,
@@ -170,6 +174,9 @@ router.delete('/me', auth, async (req, res) => {
 		// }
 
 		const result = await req.user.deleteOne();
+
+		sendGoodbyeEmail(req.user.email, req.user.name)
+
 		res.status(200).send(req.user);
 	} catch (error) {
 		res.status(500).send(error);

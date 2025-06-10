@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "test": "jest"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -24,5 +26,8 @@
     "sharp": "^0.34.2",
     "task-manager": "file:",
     "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
   }
 }

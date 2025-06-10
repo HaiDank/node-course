@@ -1,6 +1,5 @@
 import { default as mongoose } from "mongoose";
+import 'dotenv/config'
 
-
-
-mongoose.connect('mongodb://localhost:27017/task-manager-api')
+mongoose.connect(process.env.MONGODB_URL)
 
