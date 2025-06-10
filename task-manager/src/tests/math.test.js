@@ -1,4 +1,4 @@
-const { calculateTip, FtoC, CtoF } = require('../math');
+import { calculateTip, FtoC, CtoF } from '../math.js';
 
 test('Calculate total with tip', () => {
 	expect(calculateTip(100, 0.2)).toBe(120);
@@ -12,6 +12,15 @@ test('Convert 0C to 32F', () => {
 	expect(CtoF(0)).toBe(32);
 });
 
-// test('faill', () => {
-// 	throw new Error('It failed successfully');
+// test('Async test', (done) => {
+// 	add(1, 1).then((res) => {
+// 		expect(res).toBe(2);
+// 		done();
+// 	});
+// });
+
+// test('Async await test', async () => {
+// 	const sum = await add(1, 1)
+
+//   expect(sum).toBe(2)
 // });

@@ -5,7 +5,6 @@ import multer from 'multer';
 import sharp from 'sharp';
 import { sendGoodbyeEmail, sendWelcomeEmail } from '../emails/accounts.js';
 
-
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -63,13 +62,19 @@ router.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		const user = await User.findByCredentials(email, password);
+
+		if (!user) {
+			res.status(404).send(e);
+			console.log(e);
+		}
+
 		const token = await user.generateAuthToken();
 		res.send({
 			user: user,
 			token,
 		});
 	} catch (e) {
-		res.status(404).send(e);
+		res.status(400).send(e);
 		console.log(e);
 	}
 });
@@ -98,7 +103,7 @@ router.post('/sign-up', async (req, res) => {
 		const user = new User(req.body);
 		await user.save();
 
-		sendWelcomeEmail(user.email, user.name)
+		sendWelcomeEmail(user.email, user.name);
 
 		const token = await user.generateAuthToken();
 		res.status(201).send({
@@ -175,7 +180,7 @@ router.delete('/me', auth, async (req, res) => {
 
 		const result = await req.user.deleteOne();
 
-		sendGoodbyeEmail(req.user.email, req.user.name)
+		sendGoodbyeEmail(req.user.email, req.user.name);
 
 		res.status(200).send(req.user);
 	} catch (error) {

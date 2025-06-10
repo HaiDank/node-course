@@ -1,10 +1,17 @@
-const calculateTip = (total, tipPercent) => {
+export const calculateTip = (total, tipPercent) => {
 	const tip = total * tipPercent;
 	return total + tip;
 };
 
-const FtoC = (degree) => (degree - 32) / 1.8;
+export const FtoC = (degree) => (degree - 32) / 1.8;
 
-const CtoF = (degree) => degree * 1.8 + 32;
+export const CtoF = (degree) => degree * 1.8 + 32;
 
-module.exports = { calculateTip, FtoC, CtoF };
+export const add = (a, b) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve(a + b);
+		}, 2000);
+	});
+};
+
