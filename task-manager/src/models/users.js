@@ -5,46 +5,54 @@ import jwt from 'jsonwebtoken';
 import { Task } from './tasks.js';
 import 'dotenv/config';
 
-const UserSchema = new mongoose.Schema({
-	name: {
-		required: true,
-		trim: true,
-		type: String,
-	},
-	email: {
-		type: String,
-		unique: true,
-		validate(value) {
-			if (!validator.isEmail(value)) {
-				throw new Error('Email is invalid');
-			}
+const UserSchema = new mongoose.Schema(
+	{
+		avatar: {
+			type: Buffer,
 		},
-		required: true,
-		trim: true,
-	},
-	password: {
-		type: String,
-		validate(value) {
-			if (value.length <= 6) {
-				throw new Error('password is too short');
-			}
+		name: {
+			required: true,
+			trim: true,
+			type: String,
 		},
-		required: true,
-		trim: true,
-	},
-	age: {
-		type: Number,
-		default: 0,
-	},
-	tokens: [
-		{
-			token: {
-				type: String,
-				required: true,
+		email: {
+			type: String,
+			unique: true,
+			validate(value) {
+				if (!validator.isEmail(value)) {
+					throw new Error('Email is invalid');
+				}
 			},
+			required: true,
+			trim: true,
 		},
-	],
-});
+		password: {
+			type: String,
+			validate(value) {
+				if (value.length <= 6) {
+					throw new Error('password is too short');
+				}
+			},
+			required: true,
+			trim: true,
+		},
+		age: {
+			type: Number,
+			default: 0,
+		},
+		tokens: [
+			{
+				token: {
+					type: String,
+					required: true,
+				},
+			},
+		],
+	},
+	{
+		timestamps: true,
+	}
+);
 
 UserSchema.virtual('tasks', {
 	ref: 'Task',

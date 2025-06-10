@@ -6,12 +6,41 @@ var router = Router();
 /* GET tasks listing. */
 router.get('/', auth, async (req, res, next) => {
 	try {
-		const owner = req.user._id;
-		const result = await Task.find({ owner });
+		const match = {};
+		const sort = {}
+		if (req.query.completed) {
+			match.completed = req.query.completed === 'true';
+		}
 
-		res.status(200).send(result);
+		if (req.query.sortBy) {
+			const parts = req.query.sortBy.split(':');
+			sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
+		}
+
+		const page = parseInt(req.query.page);
+
+		if (page <= 0) {
+			throw new Error('invalid page');
+		}
+
+		const limit = parseInt(req.query.limit);
+		const user = req.user;
+		const result = await user.populate({
+			path: 'tasks',
+			match,
+			options: {
+				limit,
+				skip: (page - 1) * limit,
+				sort
+			},
+		});
+
+		const count = await Task.countDocuments({ owner: user._id });
+
+		res.status(200).send({ tasks: result.tasks, count });
 	} catch (e) {
 		res.status(400).send(e);
+		console.log(e)
 	}
 });
 
@@ -34,8 +63,8 @@ router.get('/:id', auth, async (req, res, next) => {
 // POST create task
 router.post('/', auth, async (req, res) => {
 	try {
-		const owner = req.user._id
-		const task = new Task({...req.body, owner});
+		const owner = req.user._id;
+		const task = new Task({ ...req.body, owner });
 
 		const result = await task.save();
 
