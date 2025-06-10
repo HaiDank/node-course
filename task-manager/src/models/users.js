@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Task } from './tasks.js';
+import 'dotenv/config';
 
 const UserSchema = new mongoose.Schema({
 	name: {
@@ -22,7 +24,11 @@ const UserSchema = new mongoose.Schema({
 	},
 	password: {
 		type: String,
-		validate(value) {},
+		validate(value) {
+			if (value.length <= 6) {
+				throw new Error('password is too short');
+			}
+		},
 		required: true,
 		trim: true,
 	},
@@ -40,6 +46,12 @@ const UserSchema = new mongoose.Schema({
 	],
 });
 
+UserSchema.virtual('tasks', {
+	ref: 'Task',
+	localField: '_id',
+	foreignField: 'owner',
+});
+
 UserSchema.pre('save', async function (next) {
 	const user = this;
 	if (user.isModified('password')) {
@@ -48,6 +60,18 @@ UserSchema.pre('save', async function (next) {
 
 	next();
 });
+
+UserSchema.pre(
+	'deleteOne',
+	{ document: true, query: false },
+	async function (next) {
+		const user = this;
+
+		await Task.deleteMany({ owner: user._id });
+
+		next();
+	}
+);
 
 UserSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email });
@@ -66,7 +90,10 @@ UserSchema.statics.findByCredentials = async (email, password) => {
 
 UserSchema.method('generateAuthToken', async function () {
 	const user = this;
-	const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+	const token = jwt.sign(
+		{ _id: user._id.toString() },
+		process.env.JWT_SECRET
+	);
 
 	user.tokens.push({ token });
 	await user.save();
@@ -75,12 +102,12 @@ UserSchema.method('generateAuthToken', async function () {
 
 UserSchema.methods.toJSON = function () {
 	const user = this;
-    const userObject = user.toObject()
+	const userObject = user.toObject();
 
-    delete userObject.password
-    delete userObject.tokens
+	delete userObject.password;
+	delete userObject.tokens;
 
-    return userObject
+	return userObject;
 };
 
 export const User = mongoose.model('User', UserSchema);

@@ -37,7 +37,7 @@ router.post('/login', async(req,res) => {
 		user: user,
 		token
 	})
-  } catch (error) {
+  } catch (e) {
     res.status(404).send(e)
 	console.log(e)
   }
@@ -56,6 +56,7 @@ router.post('/sign-up', async (req, res) => {
 		});
 	} catch (e) {
 		res.status(400).send(e);
+		console.log(e)
 	}
 });
 

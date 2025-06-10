@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { Task } from '../models/tasks.js';
+import auth from '../middleware/auth.js';
 var router = Router();
 
 /* GET tasks listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', auth, async (req, res, next) => {
 	try {
-		const result = await Task.find({});
+		const owner = req.user._id;
+		const result = await Task.find({ owner });
 
 		res.status(200).send(result);
 	} catch (e) {
@@ -14,10 +16,11 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET task by id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', auth, async (req, res, next) => {
 	try {
 		const _id = req.params.id;
-		const result = await Task.findById(_id);
+		const owner = req.user._id;
+		const result = await Task.findOne({ _id, owner });
 
 		if (!result) {
 			return res.status(404).send('Task not found!');
@@ -28,22 +31,11 @@ router.get('/:id', async (req, res, next) => {
 	}
 });
 
-//GET get incompleted tasks
-router.get('/status/incompleted', async (req, res, next) => {
-	try {
-		const result = await Task.find({ completed: false });
-
-		const count = await Task.countDocuments({ completed: false });
-
-		res.status(200).send({ tasks: result, count });
-	} catch (e) {
-		res.status(500).send(e);
-	}
-});
 // POST create task
-router.post('', async (req, res) => {
+router.post('/', auth, async (req, res) => {
 	try {
-		const task = new Task(req.body);
+		const owner = req.user._id
+		const task = new Task({...req.body, owner});
 
 		const result = await task.save();
 
@@ -54,7 +46,7 @@ router.post('', async (req, res) => {
 });
 
 // PATCH update task
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
 	const updates = Object.keys(req.body);
 	const allowedFields = ['description', 'completed'];
 	const isValidField = updates.every((update) =>
@@ -67,27 +59,26 @@ router.patch('/:id', async (req, res) => {
 
 	try {
 		const _id = req.params.id;
+		const owner = req.user._id;
 
-		const result = await Task.findOneAndUpdate({ _id }, req.body, {
+		const result = await Task.findOneAndUpdate({ _id, owner }, req.body, {
 			new: true,
 			runValidators: true,
 		});
 
-		const count = await Task.countDocuments({ completed: false });
-
 		if (!result) {
 			return res.status(404).send('Task not found!');
 		}
-		res.status(200).send({ tasks: result, count });
+		res.status(200).send(result);
 	} catch (e) {
 		res.status(500).send(e);
 	}
 });
 
 //DELETE remove a task by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
 	try {
-		const _id = req.params.id;
+		const _id = req.user._id;
 
 		const result = await Task.findOneAndDelete({ _id });
 

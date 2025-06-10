@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const TaskSchema = mongoose.Schema({
+const TaskSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true
@@ -8,6 +8,10 @@ const TaskSchema = mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+    owner: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
     }
 })
 
