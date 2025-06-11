@@ -23,10 +23,15 @@ app.set('port', port);
  */
 
 var server = createServer(app);
-const io = Server(server)
+const io = new Server(server);
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+	console.log('a user connected');
+	socket.emit('message', 'Welcome new user');
+
+	socket.on('sendMessage', (msg) => {
+		io.emit('message', msg);
+	});
 });
 
 /**
@@ -90,5 +95,5 @@ function onError(error) {
 function onListening() {
 	var addr = server.address();
 	var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-	console.log('Listening on ', port)
+	console.log('Listening on ', port);
 }
