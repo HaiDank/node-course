@@ -12,7 +12,7 @@ export const sendWelcomeEmail = (email, name) => {
 		html: `<strong>Welcome ${name}</strong>`,
 	};
 
-    sgMail.send(msg)
+    // sgMail.send(msg)
 };
 
 export const sendGoodbyeEmail = (email, name) => {
@@ -24,5 +24,5 @@ export const sendGoodbyeEmail = (email, name) => {
 		html: `<strong> ${name}</strong>`,
 	};
 
-    sgMail.send(msg)
+    // sgMail.send(msg)
 }

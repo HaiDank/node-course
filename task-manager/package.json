@@ -7,7 +7,7 @@
   "scripts": {
     "start": "dotenvx run -f .env node ./bin/www",
     "dev": "dotenvx run -f .env nodemon ./bin/www",
-    "test": "dotenvx run -f .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test": "dotenvx run -f .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --runInBand",
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
