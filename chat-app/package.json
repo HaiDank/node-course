@@ -1,0 +1,33 @@
+{
+  "name": "chat-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "preinstall": "npx only-allow pnpm",
+    "dev": "concurrently \"nodemon ./bin/www\" \"pnpm run watch:css\"",
+    "build": "pnpm run build:css",
+    "build:css": "postcss ./style.css -o public/stylesheets/style.css",
+    "watch:css": "postcss ./style.css -o public/stylesheets/style.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3",
+    "handlebars": "^4.7.8",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.4",
+    "socket.io": "^4.8.1",
+    "tailwindcss": "^4.1.8"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
+    "postcss-cli": "^11.0.1"
+  }
+}
