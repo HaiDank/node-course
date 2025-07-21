@@ -6,10 +6,16 @@
 		<link rel="stylesheet" href="stylesheets/style.css" />
 		<title>Chat App</title>
 	</head>
-	<body>
+	<body class="flex flex-col items-center w-screen h-screen gap-4 pt-10">
 		<h1 class="text-5xl font-bold">This is a chat app</h1>
 
-		<form id='chat-form' class="max-w-md mx-auto">
+		<div class="w-full grow">
+			<p class="w-full">
+				message
+			</p>
+		</div>
+
+		<form id='chat-form' class="flex w-full gap-2 mx-auto">
 			<div class="relative z-0 w-full mb-5 group">
 				<input
 					type="text"
@@ -25,6 +31,7 @@
 				>
 			</div>
 			<button
+				id="button"
 				type="submit"
 				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
 			>

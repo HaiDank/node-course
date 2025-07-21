@@ -7,7 +7,12 @@
 import app from '../app.js';
 import d from 'debug';
 var debug = d('chat-app:server');
-
+import {
+	RegExpMatcher,
+	TextCensor,
+	englishDataset,
+	englishRecommendedTransformers,
+} from 'obscenity';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -23,14 +28,40 @@ app.set('port', port);
  */
 
 var server = createServer(app);
+
+// create profanity filter
+
+const matcher = new RegExpMatcher({
+	...englishDataset.build(),
+	...englishRecommendedTransformers,
+});
+const censor = new TextCensor();
+
+// create socket io server
 const io = new Server(server);
 
 io.on('connection', (socket) => {
 	console.log('a user connected');
 	socket.emit('message', 'Welcome new user');
+	socket.broadcast.emit('message', 'a new user has join!');
 
-	socket.on('sendMessage', (msg) => {
-		io.emit('message', msg);
+	socket.on('sendMessage', (msg, callback) => {
+		try {
+			if (matcher.hasMatch(msg)) {
+				console.log('The input text contains profanities.');
+				const matches = matcher.getAllMatches(msg);
+				io.emit('message', censor.applyTo(msg, matches));
+			} else {
+				io.emit('message', msg);
+				callback()
+			}	
+		} catch (error) {
+			callback(error)
+		}
+	});
+
+	socket.on('disconnect', () => {
+		io.broadcast.emit('message', 'a user has left!');
 	});
 });
 

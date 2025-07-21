@@ -8,7 +8,7 @@ import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import { create } from 'express-handlebars';
 
-var app = express();
+const app = express();
 const hbs = create({ partialsDir: ['./views/partials/'] });
 
 // view engine setup

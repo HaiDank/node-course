@@ -21,6 +21,7 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "nodemon": "^3.1.10",
+    "obscenity": "^0.4.4",
     "postcss": "^8.5.4",
     "socket.io": "^4.8.1",
     "tailwindcss": "^4.1.8"

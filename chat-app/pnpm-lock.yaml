@@ -35,6 +35,9 @@ importers:
       nodemon:
         specifier: ^3.1.10
         version: 3.1.10
+      obscenity:
+        specifier: ^0.4.4
+        version: 0.4.4
       postcss:
         specifier: ^8.5.4
         version: 8.5.4
@@ -774,6 +777,10 @@ packages:
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
     engines: {node: '>= 0.4'}
+
+  obscenity@0.4.4:
+    resolution: {integrity: sha512-z5bgosYRNzu95yIkRggCznD6UNGZ9jB35/GDtTu+eDOVmtnHfLJ+rBMpQxsQLKe+WrMdvzvkdlg2NLYaDxWFWA==}
+    engines: {node: '>=18.0.0'}
 
   on-finished@2.3.0:
     resolution: {integrity: sha512-ikqdkGAAyf/X/gPhXGvfgAytDZtDbr+bkNUJ0N9h5MI/dmdgCs3l6hoHrcUv41sRKew3jIwrp4qQDXiK99Utww==}
@@ -1838,6 +1845,8 @@ snapshots:
   object-assign@4.1.1: {}
 
   object-inspect@1.13.4: {}
+
+  obscenity@0.4.4: {}
 
   on-finished@2.3.0:
     dependencies:
